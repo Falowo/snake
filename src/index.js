@@ -13,6 +13,7 @@ const snake = [
     [7, 9]
 ];
 let apple = [5, 5];
+let score = 0;
 
 const drawMap = () => {
     ctx.fillStyle = "black";
@@ -69,10 +70,10 @@ const gameover = () => {
         snake[0][1] < 0
     ) {
         return true;
-    }else {
-        const[head, ...body] = snake;
-        for(let bodyElem of body) {
-            if (bodyElem[0] === head[0] && bodyElem[1] === head[1]){
+    } else {
+        const [head, ...body] = snake;
+        for (let bodyElem of body) {
+            if (bodyElem[0] === head[0] && bodyElem[1] === head[1]) {
                 return true;
             }
         }
@@ -80,18 +81,21 @@ const gameover = () => {
     return false;
 };
 const generateApple = () => {
+    score++;
+    speed += 4;
     const [x, y] = [
-        Math.round(Math.random()*19),
-        Math.round(Math.random()*19),
-    ]
+        Math.round(Math.random() * 19),
+        Math.round(Math.random() * 19),
+    ];
     for (let body of snake) {
-        if (body[0] === x && body[1] === y){
+        if (body[0] === x && body[1] === y) {
+            score--;
             return generateApple();
-        } 
+        }
     }
     apple = [x, y];
 
-}
+};
 const updateSnakePosition = () => {
     let head;
     switch (direction) {
@@ -112,12 +116,19 @@ const updateSnakePosition = () => {
             break;
     }
     snake.unshift(head);
-    if(head[0] === apple[0] && head[1] === apple[1]){
+    if (head[0] === apple[0] && head[1] === apple[1]) {
         generateApple();
-    }else{
+    } else {
         snake.pop();
     }
     return gameover();
+};
+
+const drawScore = () => {
+    ctx.fillStyle = "white";
+    ctx.font = "40px sans-serif";
+    ctx.textBaseline = 'top';
+    ctx.fillText(score, gridElem, gridElem);
 };
 
 const move = () => {
@@ -125,12 +136,16 @@ const move = () => {
         drawMap();
         drawSnake();
         drawApple();
+        drawScore();
         setTimeout(() => {
             requestAnimationFrame(move);
         }, 1000 - speed);
     } else {
-        alert('Perdu');
+        alert('Perdu, votre score est : ' + score);
         clearInterval(interval);
+        setTimeout(() => {
+            location.reload();
+        }, 1000);
     }
 };
 
