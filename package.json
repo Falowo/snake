@@ -4,11 +4,13 @@
   "description": "snake play",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "webpack": "webpack",
+    "start": "webpack serve"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Falowo/snake.git"
+    "url": "https://github.com/Falowo/snake.git"
   },
   "keywords": [
     "snake",
