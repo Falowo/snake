@@ -5,7 +5,8 @@ const ctx = canvas.getContext('2d');
 
 let speed = 500;
 let interval;
-let direction = 'e';
+let turned = true;
+let direction = ['e'];
 const gridElem = 40; // 20 elem * 20
 const snake = [
     [9, 9],
@@ -32,30 +33,55 @@ const drawApple = () => {
 };
 
 window.addEventListener('keydown', (e) => {
-    switch (e.key) {
-        case "ArrowRight":
-            direction = "e";
-            break;
-        case "ArrowLeft":
-            direction = "o";
-            break;
-        case "ArrowUp":
-            direction = "n";
-            break;
-        case "ArrowDown":
-            direction = "s";
-            break;
+    if (turned && direction.length === 1) {
 
-        default:
-            break;
+        switch (e.key) {
+            case "ArrowRight":
+                direction[0] = "e";
+                break;
+            case "ArrowLeft":
+                direction[0] = "o";
+
+                break;
+            case "ArrowUp":
+                direction[0] = "n";
+
+                break;
+            case "ArrowDown":
+                direction[0] = "s";
+
+                break;
+
+            default:
+                break;
+        }
+        turned = false;
+    } else {
+        switch (e.key) {
+            case "ArrowRight":
+                direction.push("e");
+                break;
+            case "ArrowLeft":
+                direction.push("o");
+                break;
+            case "ArrowUp":
+                direction.push("n");
+                break;
+            case "ArrowDown":
+                direction.push("s");
+                break;
+
+            default:
+                break;
+        }
     }
+
 });
 
 const addSpeed = () => {
 
     interval = setInterval(() => {
         speed += 4;
-        console.log(speed);
     }, 1000);
 
     setTimeout(() => {
@@ -98,7 +124,7 @@ const generateApple = () => {
 };
 const updateSnakePosition = () => {
     let head;
-    switch (direction) {
+    switch (direction[0]) {
         case 'e':
             head = [snake[0][0] + 1, snake[0][1]];
             break;
@@ -114,6 +140,10 @@ const updateSnakePosition = () => {
 
         default:
             break;
+    }
+    turned =true;
+    if (direction.length > 1) {
+        direction.splice(0, 1);
     }
     snake.unshift(head);
     if (head[0] === apple[0] && head[1] === apple[1]) {
@@ -141,11 +171,9 @@ const move = () => {
             requestAnimationFrame(move);
         }, 1000 - speed);
     } else {
-        alert('Perdu, votre score est : ' + score);
+        alert(`Game Over ! score : ${score}, vitesse : ${speed}`);
         clearInterval(interval);
-        setTimeout(() => {
-            location.reload();
-        }, 1000);
+        location.reload();
     }
 };
 
