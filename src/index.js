@@ -9,6 +9,7 @@ const snake = [
     [8, 9],
     [7, 9]
 ];
+const apple = [5, 5];
 
 const drawMap = () => {
     ctx.fillStyle = "black";
@@ -21,5 +22,20 @@ const drawSnake = () => {
     }
 };
 
+const drawApple = () => {
+    ctx.fillStyle = 'red';
+    ctx.fillRect(apple[0] * gridElem, apple[1] * gridElem, gridElem, gridElem);
+};
+
 drawMap();
 drawSnake();
+drawApple();
+
+const move = () => {
+    drawMap();
+    drawSnake();
+    drawApple();
+    // requestAnimationFrame(move);
+};
+
+requestAnimationFrame(move);
