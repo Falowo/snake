@@ -3,7 +3,8 @@ import './style.css';
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 
-let speed = 100;
+let speed = 500;
+let interval;
 let direction = 'e';
 const gridElem = 40; // 20 elem * 20
 const snake = [
@@ -11,7 +12,7 @@ const snake = [
     [8, 9],
     [7, 9]
 ];
-const apple = [5, 5];
+let apple = [5, 5];
 
 const drawMap = () => {
     ctx.fillStyle = "black";
@@ -51,8 +52,8 @@ window.addEventListener('keydown', (e) => {
 
 const addSpeed = () => {
 
-    const interval = setInterval(() => {
-        speed += 10;
+    interval = setInterval(() => {
+        speed += 4;
         console.log(speed);
     }, 1000);
 
@@ -78,7 +79,19 @@ const gameover = () => {
     }
     return false;
 };
+const generateApple = () => {
+    const [x, y] = [
+        Math.round(Math.random()*19),
+        Math.round(Math.random()*19),
+    ]
+    for (let body of snake) {
+        if (body[0] === x && body[1] === y){
+            return generateApple();
+        } 
+    }
+    apple = [x, y];
 
+}
 const updateSnakePosition = () => {
     let head;
     switch (direction) {
@@ -99,7 +112,11 @@ const updateSnakePosition = () => {
             break;
     }
     snake.unshift(head);
-    snake.pop();
+    if(head[0] === apple[0] && head[1] === apple[1]){
+        generateApple();
+    }else{
+        snake.pop();
+    }
     return gameover();
 };
 
@@ -113,6 +130,7 @@ const move = () => {
         }, 1000 - speed);
     } else {
         alert('Perdu');
+        clearInterval(interval);
     }
 };
 
